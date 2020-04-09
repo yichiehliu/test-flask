@@ -21,9 +21,9 @@ We define the API specifications for interacting with match making algorithm (MM
 {
     "query_id": "1001",
     "query_time": "1583868012",
-    "car_type": "unspecified", //accommodation of the car
+    "car_type": "unspecified", 
     "location": "1",
-    "start_time": 1585134000, 
+    "start_time": 1585134000, set 30 minutes as a rental time unit
     "end_time": 1585137600
 }
 ```
@@ -38,7 +38,7 @@ We define the API specifications for interacting with match making algorithm (MM
 
 **Content**
 ```json
-{"available_cars": []}
+{} //blank response
 ```
 
 ### OR
@@ -52,14 +52,20 @@ We define the API specifications for interacting with match making algorithm (MM
 ```json
 {
     {
+        "query_id":"1001", only one query id for each query, and it's from smart contract.
+        "deal_id": "1586115520", set search time as deal id. It's unique.
         "cbmid":"1000021",
-        "brand": "Mercedes Benz",
+        "car_type":"SUV",
+        "brand_id": "Mercedes Benz",
         "model_id": "s560e", 
         "price": "$80/day"
     },
     {
+        "query_id":"1001",
+        "deal_id": "1586116043",
         "cbmid":"1000022",
-        "brand": "BMW",
+        "car_type":"SUV",
+        "brand_id": "BMW",
         "model_id": "M3",
         "price": "$75/day"
     }
@@ -77,12 +83,13 @@ We define the API specifications for interacting with match making algorithm (MM
 **Message Body**
 ```json
 {
-    "order_id":"100001",
+    "order_id":"100001", 
     "user_id": "10001",
     "order_time": "1583868912",
     "location": "1",
-    "cbmid":"1000021",
-    "start_time": "1584213612",
+    "deal_id": "1586116043", // 正常用deal id 找price
+    "cbmid":"1000021", 
+    "start_time": "1584213612", 
     "end_time": "1584559212",
 }
 ```
@@ -125,7 +132,7 @@ We define the API specifications for interacting with match making algorithm (MM
 
 ## Transaction Cancelation (MMA5)
 
-**URL** : `/api/order/ordercancelation`
+**URL** : `/api/order/ordercancellation`
 
 **Method** : `POST`
 
@@ -150,6 +157,20 @@ We define the API specifications for interacting with match making algorithm (MM
 }
 ```
 
+## Failed Responses
 
-#queryid dealid/dynamic pricing --> status as pending
-#Multiple location and 24 hours 3 models
+**Condition** : Fail to cancel order 
+
+**Code** : `409 Conflict`
+
+**Content**
+```json
+{
+    "message": "False",
+    "order_id":"100001",
+}
+```
+
+
+
+

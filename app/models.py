@@ -1,12 +1,4 @@
-from main import db
-from flask import Flask
-#  from flask.ext.sqlalchemy import SQLAlchemy<--新版取消了
-from flask_sqlalchemy import SQLAlchemy
-import os
-
-
-#...下略...#
-
+from app.extensions import db  # 不用套用實例?
 
 class CarStatus(db.Model):  # 三個月內?
     __tablename__ = 'CarStatus'

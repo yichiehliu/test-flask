@@ -1,8 +1,13 @@
-from flask import render_template, flash, redirect, url_for, Blueprint
-from flask_login import login_user, logout_user, login_required, current_user
-
-
+from flask import Flask, render_template, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask import request, Blueprint
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+import os
+from sqlalchemy import and_, func
+import json
+from datetime import timedelta
+import time
 from app.models import CarStatus, OrderRecord, CarModelRelation, QueryRecord
-from bluelog.utils import redirect_back
 
-car_bp = Blueprint('car', 'rentlog')
+
+car_bp = Blueprint('car', __name__)

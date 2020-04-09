@@ -1,70 +1,115 @@
-from app.config import Config
-from app.extensions import bootstrap, db, login_manager, csrf, ckeditor, mail, moment, toolbar, migrate
-from app.models import CarStatus, OrderRecord, CarModelRelation, QueryRecord
-from flask_wtf.csrf import CSRFError
-from flask_sqlalchemy import get_debug_queries
-from flask_login import current_user
-from flask import Flask, render_template, request
 import click
-from logging.handlers import SMTPHandler, RotatingFileHandler
-import logging
 import time
 from datetime import timedelta
 import json
-from sqlalchemy import and_, func
 import os
+
+from app.config import Config
+from app.extensions import db, csrf, moment, toolbar, migrate
+from app.models import CarStatus, OrderRecord, CarModelRelation, QueryRecord
+
+from flask_sqlalchemy import SQLAlchemy, get_debug_queries
+from flask import Flask, render_template, request, jsonify
+from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from flask import request
-from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, jsonify
-from flask import Flask
 
 from app.blueprints.car import car_bp
 from app.blueprints.order import order_bp
 from app.blueprints.query import query_bp
 
-from app.extensions import bootstrap, db, login_manager, csrf, ckeditor, mail, moment, toolbar, migrate
 
-
-#  取得啟動文件資料夾路徑
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-# app = Flask(__name__)
-# app.config.from_object(Config)
-#  新版本的部份預設為none，會有異常，再設置True即可。
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-#  設置資料庫為sqlite3
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-                                        os.path.join(
-                                            pjdir, 'data0320_12.sqlite')
-app.config['SECRET_KEY'] = '\xf0?a\x9a\\\xff\xd4;\x0c\xcbHi'
-
-
-def create_app(config_name=Config):
+def create_app(config_name=None):
     if config_name is None:
-        config_name = os.getenv('FLASK_CONFIG', 'development')
+        config_name = os.getenv('CONFIG', 'development')
 
-    app = Flask('rent')  # 名字是要怎麼取? 自己隨便取? 資料夾的名稱?
-    app.config.from_object(config[config_name])
+    app = Flask(__name__)  # 名字是要怎麼取? 自己隨便取? 資料夾的名稱?
+    app.config.from_object(Config)
     # 原本都寫在create_app裡面，但太多了，所以拆成不同的register(configurate)函是
     register_extensions(app)
     register_blueprints(app)
     register_commands(app)
     register_errors(app)
-    register_shell_context(app)
-    register_template_context(app)
-    register_request_handlers(app)
+    # register_shell_context(app)
+    # register_template_context(app)
+    # register_request_handlers(app)
     return app
 
 
 def register_extensions(app):
-    bootstrap.init_app(app)
+    # bootstrap.init_app(app)
     db.init_app(app)
-    login_manager.init_app(app)
     csrf.init_app(app)
-    ckeditor.init_app(app)
-    mail.init_app(app)
     moment.init_app(app)
     toolbar.init_app(app)
     migrate.init_app(app, db)
+
+
+def register_blueprints(app):
+    app.register_blueprint(car_bp)
+    app.register_blueprint(order_bp, url_prefix='/api/order')
+    app.register_blueprint(query_bp, url_prefix='/api/query')
+    
+def register_shell_context(app):
+    @app.shell_context_processor
+    def make_shell_context():
+        return dict(db=db)
+
+
+def register_errors(app):
+    @app.errorhandler(400)
+    def bad_request(e):
+        return 400
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return 500
+
+
+
+def register_commands(app):
+    @app.cli.command()
+    @click.option('--drop', is_flag=True, help='Create after drop.')
+    def initdb(drop):
+        """Initialize the database."""
+        if drop:
+            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            db.drop_all()
+            click.echo('Drop tables.')
+        db.create_all()
+        click.echo('Initialized database.')
+
+        db.session.commit()
+        click.echo('Done.')
+
+    @app.cli.command()
+    @click.option('--car', default=10, help='Quantity of cars, default is 10.')
+    @click.option('--rentables', default=10, help='Quantity of rentalable cars, default is 10.')
+    @click.option('--query', default=50, help='Quantity of queries, default is 10.')
+    @click.option('--order', default=50, help='Quantity of orders, default is 10.')
+    def forge(car, rentables, query, order):
+        """Generate fake data."""
+        from app.fakes import fake_car, fake_query, fake_orders
+
+        db.drop_all()
+        db.create_all()
+
+        click.echo('Generating the cars...')
+        fake_car()
+
+        # click.echo('Generating %d categories...' % category)
+        # fake_categories(category)
+
+        # click.echo('Generating %d posts...' % post)
+        # fake_posts(post)
+
+        # click.echo('Generating %d comments...' % comment)
+        # fake_comments(comment)
+
+        # click.echo('Generating links...')
+        # fake_links()
+
+        click.echo('Done.')
