@@ -6,7 +6,8 @@ import os
 
 from app.config import Config
 from app.extensions import db, csrf, moment, toolbar, migrate
-from app.models import CarStatus, OrderRecord, CarModelRelation, QueryRecord
+# from app.models import ReservedCarStatus, resrvRecord, CarAllinfo, QueryRecord, OrderRecord
+from app.models import realtime_models, reserve_models
 
 from flask_sqlalchemy import SQLAlchemy, get_debug_queries
 from flask import Flask, render_template, request, jsonify
@@ -14,8 +15,8 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from app.blueprints.car import car_bp
-from app.blueprints.order import order_bp
-from app.blueprints.query import query_bp
+from app.blueprints.realtime import realtime_bp
+from app.blueprints.reservation import resrv_bp
 
 
 def create_app(config_name=None):
@@ -46,8 +47,8 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(car_bp)
-    app.register_blueprint(order_bp, url_prefix='/api/order')
-    app.register_blueprint(query_bp, url_prefix='/api/query')
+    app.register_blueprint(realtime_bp, url_prefix='/api/realtime')
+    app.register_blueprint(resrv_bp, url_prefix='/api/resrvmode')
     
 def register_shell_context(app):
     @app.shell_context_processor
