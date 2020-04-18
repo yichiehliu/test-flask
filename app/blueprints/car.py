@@ -7,7 +7,7 @@ from sqlalchemy import and_, func
 import json
 from datetime import timedelta
 import time
-from app.models import realtime_models, reserve_models
+from app.models import CarAllinfo, FONLoc, RealtimeCarDetails, RealtimeCarOrderRecord, ReservedCarStatus, QueryRecord, BookingRecord, OrderRecord
 
 
 car_bp = Blueprint('car', __name__)

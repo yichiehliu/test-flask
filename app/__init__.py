@@ -7,7 +7,6 @@ import os
 from app.config import Config
 from app.extensions import db, csrf, moment, toolbar, migrate
 # from app.models import ReservedCarStatus, resrvRecord, CarAllinfo, QueryRecord, OrderRecord
-from app.models import realtime_models, reserve_models
 
 from flask_sqlalchemy import SQLAlchemy, get_debug_queries
 from flask import Flask, render_template, request, jsonify
@@ -47,9 +46,10 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(car_bp)
-    app.register_blueprint(realtime_bp, url_prefix='/api/realtime')
-    app.register_blueprint(resrv_bp, url_prefix='/api/resrvmode')
-    
+    app.register_blueprint(realtime_bp, url_prefix='/api')
+    app.register_blueprint(resrv_bp, url_prefix='/api')
+
+
 def register_shell_context(app):
     @app.shell_context_processor
     def make_shell_context():
@@ -65,10 +65,13 @@ def register_errors(app):
     def page_not_found(e):
         return 404
 
+    @app.errorhandler(409)
+    def bad_request(e):
+        return 409
+
     @app.errorhandler(500)
     def internal_server_error(e):
         return 500
-
 
 
 def register_commands(app):
@@ -77,7 +80,8 @@ def register_commands(app):
     def initdb(drop):
         """Initialize the database."""
         if drop:
-            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            click.confirm(
+                'This operation will delete the database, do you want to continue?', abort=True)
             db.drop_all()
             click.echo('Drop tables.')
         db.create_all()
@@ -93,13 +97,17 @@ def register_commands(app):
     @click.option('--order', default=50, help='Quantity of orders, default is 10.')
     def forge(car, rentables, query, order):
         """Generate fake data."""
-        from app.fakes import fake_car, fake_query, fake_orders
+        from app.forges import fake_car, fake_car_status, fake_longnla
 
         db.drop_all()
         db.create_all()
 
         click.echo('Generating the cars...')
         fake_car()
+        click.echo('Generating the car_status...')
+        fake_car_status()
+        click.echo('Generating the longtitude...')
+        fake_longnla()
 
         # click.echo('Generating %d categories...' % category)
         # fake_categories(category)
