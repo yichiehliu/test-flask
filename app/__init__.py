@@ -10,6 +10,7 @@ from app.extensions import db, csrf, moment, toolbar, migrate
 
 from flask_sqlalchemy import SQLAlchemy, get_debug_queries
 from flask import Flask, render_template, request, jsonify
+from flask import make_response, Response
 from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
@@ -56,6 +57,12 @@ def register_shell_context(app):
         return dict(db=db)
 
 
+def Response_headers(content):
+    resp = Response(content)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
@@ -71,6 +78,8 @@ def register_errors(app):
 
     @app.errorhandler(500)
     def internal_server_error(e):
+        # content = json.dumps({"error_code": "500"})
+        # resp = Response_headers(content)
         return 500
 
 
@@ -97,11 +106,12 @@ def register_commands(app):
     @click.option('--order', default=50, help='Quantity of orders, default is 10.')
     def forge(car, rentables, query, order):
         """Generate fake data."""
-        from app.forges import fake_car, fake_car_status, fake_longnla
+        from app.forges import fake_car, fake_car_status, fake_longnla, fake_scooter
 
         db.drop_all()
         db.create_all()
-
+        click.echo('Generating the scooters...')
+        fake_scooter()
         click.echo('Generating the cars...')
         fake_car()
         click.echo('Generating the car_status...')

@@ -2,11 +2,81 @@ from app.extensions import db  # 不用套用實例?
 # from geoalchemy2 import Geometry
 
 
+class EscooterAllinfo(db.Model):
+    __tablename__ = 'EscooterAllinfo'
+    item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    bmid = db.Column(db.String, default="0")
+    car_type = db.Column(db.String, default="scooter")
+    sub_type = db.Column(db.String, default="Wemo")
+    brand_id = db.Column(db.String, default="0")
+    model_id = db.Column(db.String, default="0")
+    price = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String, nullable=False)
+    UsedorNot = db.Column(db.Boolean, nullable=False)
+
+    def __init__(self, location, price, UsedorNot):
+        # self.bmid = bmid
+        # self.car_type = car_type
+        # self.sub_type = sub_type
+        # self.brand_id = brand_id
+        # self.model_id = model_id
+        self.location = location
+        self.price = price
+        self.UsedorNot = UsedorNot
+
+    def __repr__(self):
+        return '<EscooterAllinfo %r>' % self.item_id
+
+
+class EscooterOrderRecord(db.Model):  # After activate the reservation
+    __tablename__ = 'EscooterOrderRecord'
+    oid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    uid = db.Column(db.String, nullable=False)
+    # rid = db.Column(db.String, db.ForeignKey(
+    #     'BookingRecord.rid'), nullable=False)
+    # assign a item id
+    # qd_id = db.Column(db.String, db.ForeignKey(
+    #     'QueryRecord.id'), nullable=True)
+    item_id = db.Column(db.String, db.ForeignKey(
+        'CarAllinfo.item_id'), nullable=True)
+    # bmid = db.Column(db.String, db.ForeignKey(
+    #     'CarAllinfo.bmid'), nullable=False)
+    created_at = db.Column(db.Integer, server_default=db.func.now())
+    st = db.Column(db.Integer, nullable=False)
+    et = db.Column(db.Integer, nullable=False)
+    location = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    # Booked and Activate and Return car using three url but same database
+    # OrderConfirmed(Pending, item_id = 0)
+    # -> Activated(Ready to drive(within 20 minutes), assign item_id)
+    # -> Finished(Returned the car)
+    # Canceled
+    status = db.Column(db.String, nullable=False)
+
+    def __init__(self, oid, uid, item_id, created_at,  st, et, location, price, status):
+        # self.qd_id = qd_id
+        self.uid = uid
+        self.oid = oid
+        self.item_id = item_id
+        self.created_at = created_at
+        # self.reserved_time = reserved_time # activation time ??
+        self.st = st
+        self.et = et
+        # self.bmid = bmid
+        self.location = location
+        self.status = status
+        self.price = price
+
+    def __repr__(self):
+        return '<EscooterOrderRecord %r>' % self.oid
+
+
 class CarAllinfo(db.Model):  # 8 columns
     __tablename__ = 'CarAllinfo'
     item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     bmid = db.Column(db.String, nullable=False)
-    car_type = db.Column(db.String, nullable=False)
+    car_type = db.Column(db.String, default="car")
+    sub_type = db.Column(db.String, nullable=False)
     brand_id = db.Column(db.String, nullable=False)
     model_id = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
@@ -15,10 +85,10 @@ class CarAllinfo(db.Model):  # 8 columns
     UsedorNot = db.Column(db.Boolean, nullable=False)  # Used currently or not
     # cbm = db.relationship('CarStatus', backref='cbm', lazy=True)
 
-    def __init__(self, item_id, bmid, car_type, brand_id, location, model_id, price, UsedorNot):
+    def __init__(self, bmid, sub_type, brand_id, location, model_id, price, UsedorNot):
         self.bmid = bmid
-        self.item_id = item_id
-        self.car_type = car_type
+        # self.car_type = car_type
+        self.sub_type = sub_type
         self.brand_id = brand_id
         self.model_id = model_id
         self.location = location
@@ -150,7 +220,7 @@ class OrderRecord(db.Model):  # After activate the reservation
     location = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     # Booked and Activate and Return car using three url but same database
-    # OrderReserved(Pending, item_id = 0)
+    # OrderConfirmed(Pending, item_id = 0)
     # -> Activated(Ready to drive(within 20 minutes), assign item_id)
     # -> Finished(Returned the car)
     # Canceled
