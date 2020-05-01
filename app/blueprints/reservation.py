@@ -2,7 +2,7 @@ from datetime import datetime
 
 import numpy as np
 from math import *
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask import request, Blueprint
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -73,8 +73,15 @@ def distance(origin, destination):
     return d  # km
 
 
+@resrv_bp.route('/query/escooter/123456', methods=['GET', 'POST'])
+def test():
+    return Response(json.dumps({'output': 123}), mimetype='application/json')
+
+
 @resrv_bp.route('/query/escooter/', methods=['GET', 'POST'])
-def queryforescooter():
+def escooter():
+    # return render_template('404.html')
+    # return Response(json.dumps({'output': 123}), mimetype='application/json')
     params = request.args.get('params', type=str)
     decoded = base64.urlsafe_b64decode(
         params.encode('utf-8')).decode('utf-8')
@@ -95,25 +102,28 @@ def queryforescooter():
     cntd = 0
     for i in loc_query:
         if (distance(eval(i.location), eval(user_longnla)) <= 5):  # within 5km
+            if(i.UsedorNot == False):
+                did = str(int(time.time()) + int(qid) + cntd)
 
-            did = str(int(time.time()) + int(qid) + cntd)
-
-            output.append({'query_id': qid, 'location': i.location, 'deal_id': did,
-                           'brand_id': i.brand_id, 'bmid': i.bmid, "vehicle_type": "ecsooter",
-                           'subtype': i.sub_type,
-                           'model_id': i.model_id, 'price': str(i.price*rentalperiodcnt)})
-            cntd += 1
+                output.append({'query_id': qid, 'location': i.location, 'deal_id': did,
+                               'brand_id': i.brand_id, 'bmid': i.bmid, "vehicle_type": "ecsooter",
+                               'subtype': i.sub_type, 'item_id': str(i.item_id),
+                               'model_id': i.model_id, 'price': str(i.price*rentalperiodcnt)})
+                cntd += 1
 
     return jsonify(output)
+    # Response(json.dumps(output), mimetype='application/json')
+    # jsonify(output)
 
 
-@resrv_bp.route('/order/confirm/escooter/', methods=['GET', 'POST'])
+@resrv_bp.route('/order/confirm/escooter', methods=['GET', 'POST'])
 def scooterorderconfirm():
     output = {}
     if request.is_json:
         data = request.get_json()
 
     rentalperiodcnt = 0
+    rentalperiodcnt = (et-st)/3600
     rentalcnt = 0
 
     oid = data['order_id']
@@ -131,7 +141,8 @@ def scooterorderconfirm():
         "user_id": uid,
         "bmid": bm_id
     }
-    if(scooter.count() == 1):
+    # return {"1": scooter.price}
+    if(str(scooter.item_id) == item_id):
         scooter.UsedorNot = True
 
         order = EscooterOrderRecord(
@@ -141,26 +152,26 @@ def scooterorderconfirm():
             st=data['start_time'],
             et=data['end_time'],
             location=loc,
-            item_id=None,
+            item_id=item_id,
             # bmid=data['bmid'],
             # price 應該要用deal id 但目前沒有dynamic pricing 所以就再去db撈一次
             price=scooter.price,
-            bmid=bm_id,
+            # bm_id=bm_id,
             status="Confirmed"
         )
         output.update({
-            "price": str(db.session.query(EscooterAllinfo).filter(EscooterAllinfo.item_id == item_id).price),
+            "price": str(db.session.query(EscooterAllinfo).filter(EscooterAllinfo.item_id == item_id).one().price * rentalperiodcnt),
             "message": True
         })
         db.session.add(order)
         db.session.commit()
     else:
         output.update({
-            "price": str(db.session.query(EscooterAllinfo).filter(EscooterAllinfo.item_id == item_id).price),
+            "price": str(db.session.query(EscooterAllinfo).filter(EscooterAllinfo.item_id == item_id).one().price * rentalperiodcnt),
             "message": False
         })
 
-    return jsonify(order)
+    return jsonify(output)
 
 
 @resrv_bp.route('/query/car', methods=['GET', 'POST'])
@@ -376,11 +387,11 @@ def orderconfirmation():
     #     return None
 
 
-@resrv_bp.route('/order/cancel/car', methods=['POST'])
+@resrv_bp.route('/order/cancel/car', methods=['GET', 'POST'])
 def ordercancellation():
     output = {}
     if request.is_json:
-        data = request.get_json()
+        data = request.json
 
     # find rental st et,car info
     oid = data['order_id']

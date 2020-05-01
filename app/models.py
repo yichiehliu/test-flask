@@ -38,7 +38,7 @@ class EscooterOrderRecord(db.Model):  # After activate the reservation
     # qd_id = db.Column(db.String, db.ForeignKey(
     #     'QueryRecord.id'), nullable=True)
     item_id = db.Column(db.String, db.ForeignKey(
-        'CarAllinfo.item_id'), nullable=True)
+        'EscooterAllinfo.item_id'), nullable=True)
     # bmid = db.Column(db.String, db.ForeignKey(
     #     'CarAllinfo.bmid'), nullable=False)
     created_at = db.Column(db.Integer, server_default=db.func.now())

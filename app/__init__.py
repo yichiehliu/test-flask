@@ -15,7 +15,7 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from app.blueprints.car import car_bp
-from app.blueprints.realtime import realtime_bp
+# from app.blueprints.realtime import realtime_bp
 from app.blueprints.reservation import resrv_bp
 
 
@@ -47,7 +47,7 @@ def register_extensions(app):
 
 def register_blueprints(app):
     app.register_blueprint(car_bp)
-    app.register_blueprint(realtime_bp, url_prefix='/api')
+    # app.register_blueprint(realtime_bp, url_prefix='/api')
     app.register_blueprint(resrv_bp, url_prefix='/api')
 
 
@@ -57,30 +57,36 @@ def register_shell_context(app):
         return dict(db=db)
 
 
-def Response_headers(content):
-    resp = Response(content)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+# def Response_headers(content):
+#     resp = Response(content)
+#     resp.headers['Access-Control-Allow-Origin'] = '*'
+#     return resp
 
 
 def register_errors(app):
     @app.errorhandler(400)
     def bad_request(e):
-        return 400
+        content = json.dumps({"error_code": "500"})
+        # resp = Response_headers(content)
+        return content
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return 404
+        content = json.dumps({"error_code": "500"})
+        # resp = Response_headers(content)
+        return content
 
     @app.errorhandler(409)
     def bad_request(e):
-        return 409
+        content = json.dumps({"error_code": "500"})
+        # resp = Response_headers(content)
+        return content
 
     @app.errorhandler(500)
     def internal_server_error(e):
-        # content = json.dumps({"error_code": "500"})
+        content = json.dumps({"error_code": "500"})
         # resp = Response_headers(content)
-        return 500
+        return content
 
 
 def register_commands(app):
