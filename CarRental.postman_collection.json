@@ -1,0 +1,523 @@
+{
+	"info": {
+		"_postman_id": "834486e4-046f-426e-8874-80aaf91c695a",
+		"name": "CarRental",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CarQuery",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"query_time\": 1583868012,\r\n    \"car_type\": \"unspecified\",\r\n    \"location\": \"1\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585134900\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/query/queryforcars",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"query",
+						"queryforcars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderconfirmation",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"order_id\":\"100001\", \r\n    \"user_id\": \"10001\",\r\n    \"order_time\": \"1583868912\",\r\n    \"location\": \"1\",\r\n    \"deal_id\": \"1586116043\",\r\n    \"cbmid\":\"1000021\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585134900\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/order/orderconfirmation",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"order",
+						"orderconfirmation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order_cancellation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Realtime_query",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"query_time\": 1583868012,\r\n    \"user_loc\": \"121.5645,25.0340\"\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/realtime/query/car",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"realtime",
+						"query",
+						"car"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Realtime_activate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"order_id\": \"1003\",\r\n    \"order_time\": 1583868012,\r\n    \"item_id\": \"100000010\",\r\n    \"user_id\": \"10001\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585134900\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/realtime/activate/car",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"realtime",
+						"activate",
+						"car"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Realtime_return",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"order_id\": \"1003\",\r\n    \"order_time\": 1583868012,\r\n    \"item_id\":\"100000000\",\r\n    \"user_id\":\"10001\",\r\n    \"location\": \"1\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585134900\r\n}\t"
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resrv_return",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"order_id\": \"101231123\",\r\n    \"item_id\": \"1000006\",\r\n    \"return_time\": 1583868012,\r\n    \"user_id\":\"10001\"\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/return/car",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"return",
+						"car"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resrv_query",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"query_time\": 1583868012,\r\n    \"vehicle_type\": \"car\", \r\n    \"subtype\": \"unspecified\",\r\n    \"location\": \"(25.021295, 121.539112)\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585137600\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/query/car?params=ewogICAgInF1ZXJ5X2lkIjogIjEwMDEiLAogICAgInF1ZXJ5X3RpbWUiOiAxNTgzODY4MDEyLAogICAgInZlaGljbGVfdHlwZSI6ICJjYXIiLCAKICAgICJzdWJ0eXBlIjogInVuc3BlY2lmaWVkIiwKICAgICJsb2NhdGlvbiI6ICIoMjUuMDIxMjk1LCAxMjEuNTM5MTEyKSIsCiAgICAic3RhcnRfdGltZSI6IDE1ODUxMzQwMDAsIAogICAgImVuZF90aW1lIjogMTU4NTEzNzYwMAp9",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"query",
+						"car"
+					],
+					"query": [
+						{
+							"key": "params",
+							"value": "ewogICAgInF1ZXJ5X2lkIjogIjEwMDEiLAogICAgInF1ZXJ5X3RpbWUiOiAxNTgzODY4MDEyLAogICAgInZlaGljbGVfdHlwZSI6ICJjYXIiLCAKICAgICJzdWJ0eXBlIjogInVuc3BlY2lmaWVkIiwKICAgICJsb2NhdGlvbiI6ICIoMjUuMDIxMjk1LCAxMjEuNTM5MTEyKSIsCiAgICAic3RhcnRfdGltZSI6IDE1ODUxMzQwMDAsIAogICAgImVuZF90aW1lIjogMTU4NTEzNzYwMAp9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resrv_booking",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"deal_id\": \"1588009932\",\r\n    \"order_id\":\"1711\",\r\n    \"order_time\": 1583868012,\r\n    \"user_id\":\"10001\",\r\n    \"bmid\": \"1000022\",\r\n    \"location\": \"(25.021295, 121.539112)\",\r\n    \"start_time\": 1585134900, \r\n    \"end_time\": 1585138500\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/order/confirm/car/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"order",
+						"confirm",
+						"car",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resrv_booking_cancel",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"order_id\":\"171\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/order/cancel/car",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"order",
+						"cancel",
+						"car"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resrv_activate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"order_id\": \"101231125\",\n    \"activate_time\": 1583868012,\n    \"user_id\": \"10001\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/api/activate/car",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"activate",
+						"car"
+					],
+					"query": [
+						{
+							"key": "\"order_id\"",
+							"value": " \"101231122\",",
+							"disabled": true
+						},
+						{
+							"key": "\"activate_time\"",
+							"value": " 1583868012,",
+							"disabled": true
+						},
+						{
+							"key": "\"user_id\"",
+							"value": "\"10001\"",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scooter_query",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"query_time\": 1583868012,\r\n    \"vehicle_type\": \"escooter\", \r\n    \"subtype\": \"unspecified\",\r\n    \"location\": \"(25.021295, 121.539112)\",\r\n    \"start_time\": 1585134000, \r\n    \"end_time\": 1585137600\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/query/escooter?params=ewogICAgInF1ZXJ5X2lkIjogIjEwMDEiLAogICAgInF1ZXJ5X3RpbWUiOiAxNTgzODY4MDEyLAogICAgInZlaGljbGVfdHlwZSI6ICJlc2Nvb3RlciIsIAogICAgInN1YnR5cGUiOiAidW5zcGVjaWZpZWQiLAogICAgImxvY2F0aW9uIjogIigyNS4wMjEyOTUsIDEyMS41MzkxMTIpIiwKICAgICJzdGFydF90aW1lIjogMTU4NTEzNDAwMCwgCiAgICAiZW5kX3RpbWUiOiAxNTg1MTM3NjAwCn0=",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"query",
+						"escooter"
+					],
+					"query": [
+						{
+							"key": "params",
+							"value": "ewogICAgInF1ZXJ5X2lkIjogIjEwMDEiLAogICAgInF1ZXJ5X3RpbWUiOiAxNTgzODY4MDEyLAogICAgInZlaGljbGVfdHlwZSI6ICJlc2Nvb3RlciIsIAogICAgInN1YnR5cGUiOiAidW5zcGVjaWZpZWQiLAogICAgImxvY2F0aW9uIjogIigyNS4wMjEyOTUsIDEyMS41MzkxMTIpIiwKICAgICJzdGFydF90aW1lIjogMTU4NTEzNDAwMCwgCiAgICAiZW5kX3RpbWUiOiAxNTg1MTM3NjAwCn0="
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scooter_order",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"query_id\": \"1001\",\r\n    \"deal_id\": \"1588009932\",\r\n    \"order_id\":\"1717\",\r\n    \"order_time\": 1583868012,\r\n    \"user_id\":\"10001\",\r\n    \"bm_id\": \"0\",\r\n    \"item_id\": \"13\",\r\n    \"location\": \"(25.021295, 121.539112)\",\r\n    \"start_time\": 1585134900, \r\n    \"end_time\": 1585138500\r\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/order/confirm/escooter",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"order",
+						"confirm",
+						"escooter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post_test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/query/escooter/123456",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"query",
+						"escooter",
+						"123456"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
