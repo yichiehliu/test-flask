@@ -25,6 +25,8 @@ def create_app(config_name=None):
 
     app = Flask(__name__)  # 名字是要怎麼取? 自己隨便取? 資料夾的名稱?
     app.config.from_object(Config)
+
+    # app.run('0.0.0.0: 5050')
     # 原本都寫在create_app裡面，但太多了，所以拆成不同的register(configurate)函是
     register_extensions(app)
     register_blueprints(app)

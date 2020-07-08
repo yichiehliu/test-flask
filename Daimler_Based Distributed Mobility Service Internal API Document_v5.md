@@ -25,7 +25,7 @@ We define the API specifications for interacting with match making algorithm (MM
     "vehicle_type": "car", 
     "subtype": "unspecified",
     "location": "(25.016695, 121.543692)",
-    "start_time": 1585134000, set 30 minutes as a rental time unit, 3600 unix time == 1 hour
+    "start_time": 1585134000, 3600 unix time == 1 hour
     "end_time": 1585137600
 }
 ```
@@ -101,12 +101,12 @@ Booked and Activate and Return the car using three url but same database
 **URL** : `http://127.0.0.1:5000/api/order/confirm/car`
 
 **Method** : `POST`
-
+// 正常用deal id 找price
 **Message Body**
 ```json
 {
     "query_id": "1003",
-    "deal_id": "1587221268", // 正常用deal id 找price
+    "deal_id": "1587221268", 
     "order_id":"101231126",
     "order_time": 1583868012,
     "user_id":"10001",
@@ -177,7 +177,7 @@ Booked and Activate and Return the car using three url but same database
 ```json
 {
     "message": true,
-    "order_id":"100001",
+    "order_id":"101231125",
 }
 ```
 

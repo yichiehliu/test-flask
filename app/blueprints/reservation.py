@@ -27,30 +27,6 @@ resrv_bp = Blueprint('resrv', __name__)
 
 # ==========================================================================================================================
 
-# def distance(A, B):  # 先緯度後經度
-#     ra = 6378140  # radius of equator: meter
-#     rb = 6356755  # radius of polar: meter
-#     flatten = 0.003353  # Partial rate of the earth
-#     # change angle to radians
-
-#     radLatA = np.radians(A[0])
-#     radLonA = np.radians(A[1])
-#     radLatB = np.radians(B[0])
-#     radLonB = np.radians(B[1])
-
-#     pA = np.arctan(rb / ra * np.tan(radLatA))
-#     pB = np.arctan(rb / ra * np.tan(radLatB))
-
-#     x = np.arccos(np.multiply(np.sin(pA), np.sin(
-#         pB)) + np.multiply(np.multiply(np.cos(pA), np.cos(pB)), np.cos(radLonA - radLonB)))
-#     c1 = np.multiply((np.sin(x) - x), np.power((np.sin(pA) +
-#                                                 np.sin(pB)), 2)) / np.power(np.cos(x / 2), 2)
-#     c2 = np.multiply((np.sin(x) + x), np.power((np.sin(pA) -
-#                                                 np.sin(pB)), 2)) / np.power(np.sin(x / 2), 2)
-#     dr = flatten / 8 * (c1 - c2)
-#     dist = 0.001 * ra * (x + dr)
-#     return dist
-
 
 def distance(origin, destination):
     lat1, lon1 = origin
@@ -62,12 +38,6 @@ def distance(origin, destination):
     radius = 6371  # km
     dist = 6371.01 * acos(sin(lat1)*sin(lat2) + cos(lat1)
                           * cos(lat2)*cos(lon1 - lon2))
-
-    # dlat = math.radians(lat2-lat1)
-    # dlon = math.radians(lon2-lon1)
-    # a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
-    #     * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
-    # c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
     d = dist
 
     return d  # km
@@ -173,6 +143,17 @@ def scooterorderconfirm():
 
     return jsonify(output)
 
+
+# 1.Read parameters sended from Blockchain
+# 2.Find rental spots within 10km, using Rental Spot & Geographic coordinates Conversion Table to calculate the distances
+# 3.Using Car Status Table, which lists out the car amount of the time(one hour basis),
+#  the location, and the car type
+#  to check the available car type by given the 10-km-apart rental spots firstly,
+# user's rental period secondly, and the specified car type thirdly.
+# 4.Return the query result of Step 5.3
+# 5. Update the the Query_Record Table, the query details
+#  the available Car Type, the abailable rental Location, the available Rental time,
+# and check if the car amount of those condition is enough
 
 @resrv_bp.route('/query/car', methods=['GET', 'POST'])
 def queryforcar():
@@ -293,6 +274,19 @@ def post():
     if request.is_json:
         data = request.get_json()
     print(123333, data)
+
+
+# 1.Read parameters sended from Blockchain
+# 2.Using Car Status Table to check the car amount of the car type that user selected,
+# with the same logics of Step 5.3
+# 3.Return the query result of Step 12.2
+
+# 12.4 If the car amount is enough
+# 12.4.1 Update the Car Status Table, the car amount of the choosen car type should minus 1
+# 12.4.2 Update the Order Record Table, kept the comfirmed order details
+# 12.4.3 Return the order-succeeded messge
+# 12.5 If the car amount is not enough
+# 12.5.1 The Order is failed, return the order-failed message
 
 
 @resrv_bp.route('/order/confirm/car/', methods=['GET', 'POST'])

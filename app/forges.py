@@ -98,25 +98,5 @@ def fake_car_status():
                     carAmount=db.session.query(CarAllinfo.bmid).\
                     filter(and_(CarAllinfo.bmid == k, CarAllinfo.location == j)).count())
                 db.session.add(csta1)
-        # bm = db.session.query(CarAllinfo.bmid).\
-        #     filter(CarAllinfo.location == looc.location).all()
-        # bm_list = []
-        # for i in bm:
-        #     bm_list.append(i[0])
 
-        # print(bm_list)
-
-        # csta2 = ReservedCarStatus(
-        #     date=i,
-        #     location=looc,
-        #     # db.session.query(CarAllinfo.location).order_by(func.random()).limit(1),
-        #     bmid=bm_list[t-1],
-        #     # db.session.query(CarAllinfo.bmid).\
-        #     # filter(CarAllinfo.location == '1').order_by(
-        #     #     func.random()).limit(1),
-        #     carAmount=db.session.query(CarAllinfo.bmid).\
-        #     filter(CarAllinfo.location == looc).count())
-        # t += 1
-
-        # db.session.add(csta2)
     db.session.commit()
